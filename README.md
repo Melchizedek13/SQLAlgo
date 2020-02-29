@@ -1,0 +1,2 @@
+# SQLAlgo
+Interesting SQL algorithms
