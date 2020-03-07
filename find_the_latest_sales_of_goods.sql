@@ -11,3 +11,13 @@ select item_id, price, dt
       from item_sales
   ) rs
 where rs.rd = 1;
+
+-- Common sql through self-join
+select t1.item_id, t1.price, t1.dt
+  from item_sales           t1
+       left join item_sales t2
+              on t1.item_id = t2.item_id
+             and t1.dt < t2.dt
+where t2.item_id is null;
+
+-- Oracle way
