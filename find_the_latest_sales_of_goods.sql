@@ -33,3 +33,16 @@ select item_id,
   from item_sales
  group by item_id
 ;
+
+-- Exasol way
+with t(item_id, price, dt) as (
+    values(1, 100, date'2020-03-01'),
+          (1, 300, date'2020-03-04'),
+          (1, 200, date'2020-03-07'),
+          (2, 150, date'2020-03-06')
+)
+select *
+  from t
+preferring high dt
+ partition by item_id
+;
