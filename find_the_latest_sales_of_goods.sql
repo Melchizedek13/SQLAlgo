@@ -10,7 +10,18 @@ select item_id, price, dt
     select *, row_number() over (partition by item_id order by dt desc) rd
       from item_sales
   ) rs
-where rs.rd = 1;
+where rs.rd = 1
+;
+
+-- Posgres way with distinct on
+select distinct on (item_id) t.*
+  from (values
+    (1, 10,  date'2020-03-01'),
+    (1, 300, date'2020-03-04'),
+    (1, 200, date'2020-03-07'),
+    (2, 150, date'2020-03-06')) as t (item_id, price, dt)
+ order by item_id, dt desc
+;
 
 -- Common sql through self-join
 select t1.item_id, t1.price, t1.dt
@@ -18,7 +29,8 @@ select t1.item_id, t1.price, t1.dt
        left join item_sales t2
               on t1.item_id = t2.item_id
              and t1.dt < t2.dt
-where t2.item_id is null;
+where t2.item_id is null
+;
 
 -- Oracle way
 with item_sales(item_id, price, dt) as (
