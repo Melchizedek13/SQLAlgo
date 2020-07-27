@@ -30,7 +30,7 @@ with t(id, c1, c2, c3, dml_type, load_dt) as (values
 ), agg as (
     select id, c1, c2, dml_type, load_dt,
            case when array[row(id, c1, c2)] = lag(array[row(id, c1, c2)])
-                         over (order by load_dt)
+                         over (partition by id order by load_dt)
                 then 0
                 else 1
            end StartFlag
@@ -52,7 +52,7 @@ with t(id, c1, c2, c3, dml_type, load_dt) as (values
 ), agg as (
     select id, c1, c2, dml_type, load_dt,
            -- lag(0, 1, 1) over (partition by id, c1, c2 order by load_dt) key_was_changed,
-           case when hash_md5(id, c1, c2) = lag(hash_md5(id, c1, c2)) over (order by load_dt)
+           case when hash_md5(id, c1, c2) = lag(hash_md5(id, c1, c2)) over (partition by id order by load_dt)
                 then 0
                 else 1
            end StartFlag
@@ -70,52 +70,72 @@ select *
 
 -- Postgres
 with t(id, c1, c2, c3, dml_type, load_dt) as (values
-     (1, '',   null, 'A1', 'I', date'2019-12-28'),
-     (1, null, '',   'B1', 'U', date'2019-12-29'), -- Collapse
-     (1, 'A1', null, 'B2', 'U', date'2019-12-30'),
-     (1, null, 'B3', 'B3', 'U', date'2019-12-31'),
-     (1, 'A1', 'B1', 'C1', 'U', date'2020-01-01'),
-     (1, 'A1', 'B1', 'C2', 'U', date'2020-01-02'), -- Collapse
-     (1, 'A1', 'B1', 'C3', 'U', date'2020-01-03'), -- Collapse
-     (1, 'A1', 'B2', 'C3', 'U', date'2020-01-04'),
-     (1, 'A1', 'B1', 'C3', 'U', date'2020-01-05')
+     (1, '',   null, 'A1', 'I', timestamp'2019-12-28 00:00:00'),
+     (1, null, '',   'B1', 'U', timestamp'2019-12-29 00:00:00'), -- Collapse
+     (1, 'A1', null, 'B2', 'U', timestamp'2019-12-30 00:00:00'),
+     (1, null, 'B3', 'B3', 'U', timestamp'2019-12-31 00:00:00'),
+     (1, 'A1', 'B1', 'C1', 'U', timestamp'2020-01-01 00:00:00'),
+     (1, 'A1', 'B1', 'C2', 'U', timestamp'2020-01-02 00:00:00'), -- Collapse
+     (1, 'A1', 'B1', 'C3', 'U', timestamp'2020-01-03 00:00:00'), -- Collapse
+     (1, 'A1', 'B2', 'C3', 'U', timestamp'2020-01-04 00:00:00'),
+     (1, 'A1', 'B1', 'C3', 'U', timestamp'2020-01-05 00:00:00'),
+     (2, '',   null, 'A1', 'I', timestamp'2019-12-28 12:00:00'),
+     (2, null, '',   'B1', 'U', timestamp'2019-12-29 12:00:00'), -- Collapse
+     (2, 'A1', null, 'B2', 'U', timestamp'2019-12-30 12:00:00'),
+     (2, null, 'B3', 'B3', 'U', timestamp'2019-12-31 00:00:00'),
+     (2, 'A1', 'B1', 'C1', 'U', timestamp'2020-01-01 00:00:00'),
+     (2, 'A1', 'B1', 'C2', 'U', timestamp'2020-01-02 00:00:00'), -- Collapse
+     (2, 'A1', 'B1', 'C3', 'U', timestamp'2020-01-03 00:00:00'), -- Collapse
+     (2, 'A1', 'B2', 'C3', 'U', timestamp'2020-01-04 00:00:00'),
+     (2, 'A1', 'B1', 'C3', 'U', timestamp'2020-01-05 00:00:00')
 ), agg as (
     select id, c1, c2, dml_type, load_dt,
            case when array[row(id, nullif(c1, ''), nullif(c2, ''))]
                      = lag(array[row(id, nullif(c1, ''), nullif(c2, ''))])
-                         over (order by load_dt)
-                then 0
-                else 1
+                         over (partition by id order by load_dt)
+                then False
+                else True
            end StartFlag
       from t
 )
 select *
   from agg
- where startflag = 1
+ where startflag
  order by id, load_dt
 ;
 
 -- Exasol
 with t(id, c1, c2, c3, dml_type, load_dt) as (values
-     (1, '',   null, 'A1', 'I', date'2019-12-28'),
-     (1, null, '',   'B1', 'U', date'2019-12-29'), -- Collapse
-     (1, 'A1', null, 'B2', 'U', date'2019-12-30'),
-     (1, null, 'B3', 'B3', 'U', date'2019-12-31'),
-     (1, 'A1', 'B1', 'C1', 'U', date'2020-01-01'),
-     (1, 'A1', 'B1', 'C2', 'U', date'2020-01-02'), -- Collapse
-     (1, 'A1', 'B1', 'C3', 'U', date'2020-01-03'), -- Collapse
-     (1, 'A1', 'B2', 'C3', 'U', date'2020-01-04'),
-     (1, 'A1', 'B1', 'C3', 'U', date'2020-01-05')
+     (1, '',   null, 'A1', 'I', timestamp'2019-12-28 00:00:00'),
+     (1, null, '',   'B1', 'U', timestamp'2019-12-29 00:00:00'), -- Collapse
+     (1, 'A1', null, 'B2', 'U', timestamp'2019-12-30 00:00:00'),
+     (1, null, 'B3', 'B3', 'U', timestamp'2019-12-31 00:00:00'),
+     (1, 'A1', 'B1', 'C1', 'U', timestamp'2020-01-01 00:00:00'),
+     (1, 'A1', 'B1', 'C2', 'U', timestamp'2020-01-02 00:00:00'), -- Collapse
+     (1, 'A1', 'B1', 'C3', 'U', timestamp'2020-01-03 00:00:00'), -- Collapse
+     (1, 'A1', 'B2', 'C3', 'U', timestamp'2020-01-04 00:00:00'),
+     (1, 'A1', 'B1', 'C3', 'U', timestamp'2020-01-05 00:00:00'),
+     (2, '',   null, 'A1', 'I', timestamp'2019-12-28 12:00:00'),
+     (2, null, '',   'B1', 'U', timestamp'2019-12-29 12:00:00'), -- Collapse
+     (2, 'A1', null, 'B2', 'U', timestamp'2019-12-30 12:00:00'),
+     (2, null, 'B3', 'B3', 'U', timestamp'2019-12-31 00:00:00'),
+     (2, 'A1', 'B1', 'C1', 'U', timestamp'2020-01-01 00:00:00'),
+     (2, 'A1', 'B1', 'C2', 'U', timestamp'2020-01-02 00:00:00'), -- Collapse
+     (2, 'A1', 'B1', 'C3', 'U', timestamp'2020-01-03 00:00:00'), -- Collapse
+     (2, 'A1', 'B2', 'C3', 'U', timestamp'2020-01-04 00:00:00'),
+     (2, 'A1', 'B1', 'C3', 'U', timestamp'2020-01-05 00:00:00')
 ), agg as (
-    select id, c1, c2, dml_type, load_dt,
-           case when hash_md5(id, c1, c2) = lag(hash_md5(id, c1, c2)) over (order by load_dt)
-                then 0
-                else 1
-           end StartFlag
+    select t.*,
+           decode(
+              hash_md5(id, c1, c2),
+              lag(hash_md5(id, c1, c2)) over (partition by id order by load_dt),
+              False,
+              True
+           ) as keep_row_flg
       from t
 )
 select *
   from agg
- where startflag = 1
+ where keep_row_flg
  order by id, load_dt
 ;
