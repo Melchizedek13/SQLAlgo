@@ -62,7 +62,7 @@ preferring high dt
 -- ClickHouse way
 select item_id,
        argMax(price, dt) price,
-       max(dt) dt
+       max(dt) dt_
   from (
        select 1 item_id, 100 price, toDate('2020-03-01') dt union all
        select 1, 300, toDate('2020-03-04') union all
