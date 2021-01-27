@@ -1,5 +1,6 @@
--- Find three consecutive numbers in a sequence
--- gaps-and-islands-in-sequences
+/*
+    Find three consecutive numbers in a sequence
+*/
 
 with t(id) as (
     values (1), (2), (2), (3), (3), (3), (2), (4)
