@@ -1,4 +1,7 @@
-/* It is necessary to split the strings into substrings by separator, keeping the string ID. */
+/* 
+   It is necessary to split the strings into substrings by separator,
+     keeping the string ID.
+*/
 
 with t as (
    select 1 id, 'Attention, here we present a standard approach in oracle, which split strings by a separator.' c2 from dual
