@@ -3,15 +3,40 @@
 -- Theory is here https://en.wikipedia.org/wiki/Component_(graph_theory)
 
 
-/* https://dbfiddle.uk/?rdbms=postgres_13&fiddle=67bec4951730f8975100961ec41b769f
+/*
+   https://dbfiddle.uk/?rdbms=postgres_13&fiddle=67bec4951730f8975100961ec41b769f
 
+   There is the following undirected graph:
+   
                D
              /
-           C           G
-          /           /
-         B      E    /
-          \         F
+           C            G
+          /      E     /
+         B            /
+          \          F
            A
+    
+    Which is stored in tabular form with the following structure:
+    
+    create table edges(
+       n1  text,  -- First vertex id
+       n2  text   -- Second vertex id    
+    );
+    
+    
+    It is necessary to asssign connected component for each vertex of the graph:
+    _________
+    | n | c |
+    ---------
+    | A | 1 |
+    | B | 1 |
+    | C | 1 |
+    | D | 1 |
+    | E | 2 |
+    | F | 3 |
+    | G | 3 |
+    ---------
+    
 */
 
 create table edges
