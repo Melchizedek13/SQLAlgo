@@ -2,6 +2,25 @@
 -- How to assign connected subgraph ID to each node in an undirected graph in Postgres SQL?
 -- Theory is here https://en.wikipedia.org/wiki/Component_(graph_theory)
 
+
+/* https://dbfiddle.uk/?rdbms=postgres_13&fiddle=67bec4951730f8975100961ec41b769f
+
+               D
+             /
+           C           G
+          /           /
+         B      E    /
+          \         F
+           A
+*/
+
+create table edges
+as
+select * from (
+    values ('A', 'B'), ('B', 'C'), ('C', 'D'), ('E', null), ('F', 'G')
+  ) as edges(n1, n2)
+;
+
 create table clusters
 as
 with recursive rec(an, n1, n2, np, cycle) as (
