@@ -1,9 +1,10 @@
--- Postgres way with analytics
-with item_sales(item_id, price, dt) as (
-	values(1, 100, date'2020-03-01'),
-	      (1, 300, date'2020-03-04'),
-	      (1, 200, date'2020-03-07'),
-	      (2, 150, date'2020-03-06')
+-- Postgres. row_number()
+with
+item_sales(item_id, price, dt) as (values
+   (1, 100, date'2020-03-01'),
+   (1, 300, date'2020-03-04'),
+   (1, 200, date'2020-03-07'),
+   (2, 150, date'2020-03-06')
 )
 select item_id, price, dt
   from (
@@ -13,7 +14,7 @@ select item_id, price, dt
 where rs.rd = 1
 ;
 
--- Posgres way with distinct on
+-- Posgres. distinct on
 select distinct on (item_id) t.*
   from (values
     (1, 10,  date'2020-03-01'),
@@ -24,11 +25,12 @@ select distinct on (item_id) t.*
 ;
 
 -- Common sql through self-join
-with item_sales(item_id, price, dt) as (
-	values(1, 100, date'2020-03-01'),
-	      (1, 300, date'2020-03-04'),
-	      (1, 200, date'2020-03-07'),
-	      (2, 150, date'2020-03-06')
+with
+item_sales(item_id, price, dt) as (values
+   (1, 100, date'2020-03-01'),
+   (1, 300, date'2020-03-04'),
+   (1, 200, date'2020-03-07'),
+   (2, 150, date'2020-03-06')
 )
 select t1.item_id, t1.price, t1.dt
   from item_sales           t1
@@ -38,8 +40,9 @@ select t1.item_id, t1.price, t1.dt
 where t2.item_id is null
 ;
 
--- Oracle way
-with item_sales(item_id, price, dt) as (
+-- Oracle. min/max() keep dense_rank
+with
+item_sales(item_id, price, dt) as (
   select 1, 100, date'2020-03-01' from dual union all
   select 1, 300, date'2020-03-04' from dual union all
   select 1, 200, date'2020-03-07' from dual union all
@@ -52,12 +55,13 @@ select item_id,
  group by item_id
 ;
 
--- Exasol way
-with t(item_id, price, dt) as (
-    values(1, 100, date'2020-03-01'),
-          (1, 300, date'2020-03-04'),
-          (1, 200, date'2020-03-07'),
-          (2, 150, date'2020-03-06')
+-- Exasol. Preferring hight
+with
+t(item_id, price, dt) as (values
+   (1, 100, date'2020-03-01'),
+   (1, 300, date'2020-03-04'),
+   (1, 200, date'2020-03-07'),
+   (2, 150, date'2020-03-06')
 )
 select *
   from t
@@ -65,7 +69,7 @@ preferring high dt
  partition by item_id
 ;
 
--- ClickHouse way
+-- ClickHouse. argMax()
 select item_id,
        argMax(price, dt) price,
        max(dt) max_dt
@@ -77,4 +81,17 @@ select item_id,
        (2, 150, '2020-03-06')
   )
  group by item_id
+;
+
+-- Snowflake. Qualify
+with item_sales(item_id, price, dt) as (
+    select * from values
+    (1, 100, date'2020-03-01'),
+	(1, 300, date'2020-03-04'),
+	(1, 200, date'2020-03-07'),
+	(2, 150, date'2020-03-06')
+)
+select item_id, price, dt
+  from item_sales
+qualify row_number() over (partition by item_id order by dt desc) = 1
 ;
