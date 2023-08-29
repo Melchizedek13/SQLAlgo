@@ -1,19 +1,7 @@
 /*
-Table: Logs
+https://leetcode.com/problems/consecutive-numbers/
 
-+-------------+---------+
-| Column Name | Type    |
-+-------------+---------+
-| id          | int     |
-| num         | varchar |
-+-------------+---------+
-In SQL, id is the primary key for this table.
-id is an autoincrement column.
- 
-
-Find all numbers that appear at least three times consecutively.
-
-Return the result table in any order.
+Find all numbers that appear at least three times consecutively. Return the result table in any order.
 
 The result format is in the following example.
 
@@ -32,13 +20,28 @@ Logs table:
 | 6  | 2   |
 | 7  | 2   |
 +----+-----+
-Output: 
+
+Output:
 +-----------------+
 | ConsecutiveNums |
 +-----------------+
 | 1               |
 +-----------------+
+
 Explanation: 1 is the only number that appears consecutively for at least three times.
+
+Table: Logs
++-------------+---------+
+| Column Name | Type    |
++-------------+---------+
+| id          | int     |
+| num         | varchar |
++-------------+---------+
+
+In SQL, id is the primary key for this table. id is an autoincrement column.
+ 
+
+
 */
 
 -- MySQL. 1
