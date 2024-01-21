@@ -75,8 +75,8 @@ select id, dt, val,
 ;
 
 -- Snowflake
-/* https://docs.snowflake.com/en/sql-reference/functions/last_value
-
+-- https://docs.snowflake.com/en/sql-reference/functions/last_value
+/*
    If no window_frame is specified, the default is the entire window:
       - rows between unbounded preceding and unbounded following
 
