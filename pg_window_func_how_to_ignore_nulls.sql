@@ -55,6 +55,8 @@ select id, dt, val, vp,
 
 
 -- Oracle
+-- https://oracle-base.com/articles/misc/first-value-and-last-value-analytic-functions#last-value
+--   The `last_value(...)` default windowing clause is "range between unbounded preceding and current row"
 -- https://dbfiddle.uk/gX09QA5B
 with
 ds(id, dt, val) as (values
