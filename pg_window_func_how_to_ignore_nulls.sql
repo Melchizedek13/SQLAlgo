@@ -73,3 +73,13 @@ select id, dt, val,
   from ds
  order by id, dt
 ;
+
+-- Snowflake
+/* https://docs.snowflake.com/en/sql-reference/functions/last_value
+
+   If no window_frame is specified, the default is the entire window:
+      - rows between unbounded preceding and unbounded following
+
+   This differs from the ANSI standard, which specifies the following default for window frames:
+      - range between unbounded preceding and current row
+*/
