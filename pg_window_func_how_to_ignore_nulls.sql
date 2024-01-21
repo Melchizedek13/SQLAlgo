@@ -33,10 +33,10 @@ with
 */
 ds(id, dt, val) as (values
    (1, date'2020-01-01', 'a'),
-   (1, date'2020-02-01', null),  -- a
+   (1, date'2020-02-01', null),
    (1, date'2020-03-01', 'b'),
    (2, date'2021-01-01', 'x'),
-   (2, date'2021-02-03', null)   -- x
+   (2, date'2021-02-03', null)
 ),
 rs as (
    select id, dt, val,
