@@ -33,6 +33,15 @@
 --   frame_clause -> If frame_end is omitted, the end defaults to CURRENT ROW.
 --     The default framing option is RANGE UNBOUNDED PRECEDING, which is the same as RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW.
 
+-- https://www.postgresql.org/docs/current/functions-window.html
+--   Note that first_value, last_value, and nth_value consider only the rows within the “window frame”,
+--     which by default contains the rows from the start of the partition through the last peer of the current row.
+--
+--   When an aggregate function is used as a window function, it aggregates over the rows within the current row's window frame.
+--     An aggregate used with ORDER BY and the default window frame definition produces a “running sum” type of behavior, which may or may not be what's wanted.
+--       To obtain aggregation over the whole partition, omit ORDER BY or use ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING.
+--         Other frame specifications can be used to obtain other effects.
+
 with
 /*
    ds -> data set
