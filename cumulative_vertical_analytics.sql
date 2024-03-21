@@ -29,6 +29,7 @@
 -- https://www.postgresql.org/docs/current/sql-expressions.html#SYNTAX-WINDOW-FUNCTIONS
 --   frame_clause -> If frame_end is omitted, the end defaults to CURRENT ROW.
 --     The default framing option is RANGE UNBOUNDED PRECEDING, which is the same as RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW.
+-- https://dbfiddle.uk/wdeSa8Gh
 
 with
 t(d, b) as (values
