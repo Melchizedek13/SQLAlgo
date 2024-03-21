@@ -30,7 +30,8 @@
 --   frame_clause -> If frame_end is omitted, the end defaults to CURRENT ROW.
 --     The default framing option is RANGE UNBOUNDED PRECEDING, which is the same as RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW.
 
-with t(d, b) as (values
+with
+t(d, b) as (values
   (date'2010-03-01', 150),
   (date'2010-03-02', 100),
   (date'2010-03-03', 200),
