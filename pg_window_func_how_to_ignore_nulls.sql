@@ -1,29 +1,37 @@
 /*
-There is a table in DBMS that looks like this:
-
- id | dt         | val
-----+------------+---
-| 1 | 2020-01-01 | a |
-| 1 | 2020-02-01 |   |
-| 1 | 2020-03-01 | b |
-| 2 | 2021-01-01 | x |
-| 2 | 2021-02-03 |   |
-
-Needs to query it to make it look like this:
-
- id | dt         | val
-----+------------+---
-| 1 | 2020-01-01 | a |
-| 1 | 2020-02-01 | a |
-| 1 | 2020-03-01 | b |
-| 2 | 2021-01-01 | x |
-| 2 | 2021-02-03 | x |
+    There is a table in DBMS that looks like this:
+    
+    _________________________
+    | id | dt         | val |
+    |----+------------+-----|
+    | 1  | 2020-01-01 | a   |
+    | 1  | 2020-02-01 |     |
+    | 1  | 2020-03-01 | b   |
+    | 2  | 2021-01-01 | x   |
+    | 2  | 2021-02-03 |     |
+    |____|____________|_____|
+    
+    Needs to query it to make it look like this:
+    
+    ________________________
+    | id | dt         | val |
+    |----+------------+-----|
+    | 1  | 2020-01-01 | a   |
+    | 1  | 2020-02-01 | a   |
+    | 1  | 2020-03-01 | b   |
+    | 2  | 2021-01-01 | x   |
+    | 2  | 2021-02-03 | x   |
+    |____|____________|_____|
 
 */
 
 -- Postgresql
 -- https://stackoverflow.com/questions/18987791/how-do-i-efficiently-select-the-previous-non-null-value
 -- https://dbfiddle.uk/jG8iLU-9
+
+-- https://www.postgresql.org/docs/current/sql-expressions.html#SYNTAX-WINDOW-FUNCTIONS
+--   frame_clause -> If frame_end is omitted, the end defaults to CURRENT ROW.
+--     The default framing option is RANGE UNBOUNDED PRECEDING, which is the same as RANGE BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW.
 
 with
 /*
