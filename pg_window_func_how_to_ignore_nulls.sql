@@ -39,8 +39,8 @@
 --
 --   When an aggregate function is used as a window function, it aggregates over the rows within the current row's window frame.
 --     An aggregate used with ORDER BY and the default window frame definition produces a “running sum” type of behavior, which may or may not be what's wanted.
---       To obtain aggregation over the whole partition, omit ORDER BY or use ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING.
---         Other frame specifications can be used to obtain other effects.
+--       To obtain aggregation over the whole partition, omit ORDER BY or use ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING
+--     https://dbfiddle.uk/XcwxtSGI
 
 with
 /*
