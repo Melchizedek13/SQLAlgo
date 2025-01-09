@@ -39,12 +39,26 @@ Table: Logs
 +-------------+---------+
 
 In SQL, id is the primary key for this table. id is an autoincrement column.
- 
-
-
 */
 
 -- MySQL. 1
+with
+t_grp as (
+   select num,
+          id - cast(row_number() over(partition by num order by id) as signed) grp_id
+     from Logs
+),
+p as (
+   select num as ConsecutiveNums
+     from t_grp
+    group by num, grp_id
+   having count(*) >= 3
+)
+select distinct ConsecutiveNums
+  from p
+;
+
+-- MySQL. 2
 with
 cte as (
    select num,
@@ -57,26 +71,9 @@ select distinct num ConsecutiveNums
 where (num=num1) and (num=num2)
 ;
 
--- MySQL. 2
+-- MySQL. 3
 select distinct a.num as ConsecutiveNums
   from Logs a
        inner join Logs b on b.id=a.id+1 and b.num=a.num
        inner join Logs c on c.id=a.id+2 and c.num=a.num
-;
-
--- MySQL. 3
-with
-t_grp as (
-   select num, 
-          id - cast(row_number() over(partition by num order by id) as signed) grp_id
-     from Logs
-),
-p as (
-   select num as ConsecutiveNums
-     from t_grp
-    group by num, grp_id
-   having count(*) >= 3
-)
-select distinct ConsecutiveNums
-  from p
 ;
