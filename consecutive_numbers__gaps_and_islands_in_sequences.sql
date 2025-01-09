@@ -2,7 +2,8 @@
     Find three consecutive numbers in a sequence
 */
 
-with t(id) as (
+with
+t(id) as (
     values (1), (2), (2), (3), (3), (3), (2), (4)
 ), t_rn as (
     select id, row_number() over() rn from t
@@ -14,5 +15,5 @@ with t(id) as (
  select id
    from t_grp
   group by id, grp_id
-  having count(*) = 3
+ having count(*) = 3
 ;
